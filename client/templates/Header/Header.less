@@ -1,0 +1,90 @@
+.Header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #282828;
+
+  #login-buttons {
+    padding: 10px;
+
+    &:hover {
+      background-color: rgba(255,255,255,0.05);
+    }
+
+    &:active {
+      background-color: rgba(255,255,255,0.1);
+    }
+  }
+
+  .login-link-text {
+    display: inline-block;
+    line-height: 24px;
+    color: #f0f0f0;
+    font-size: 14px;
+    font-weight: 300;
+    text-decoration: none !important;
+    white-space: nowrap;
+  }
+
+  .objectsCount {
+    padding: 0 10px;
+    color: #f0f0f0;
+    font-size: 14px;
+    font-weight: 300;
+    white-space: nowrap;
+  }
+
+  .color {
+    width: 40px;
+    height: 24px;
+    margin: 0 10px;
+    outline: 1px solid #f0f0f0;
+    cursor: pointer;
+
+    .colorPicker {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  button {
+    padding: 10px;
+    border: 0 none;
+    background-color: transparent;
+    cursor: pointer;
+    color: #f0f0f0;
+    white-space: nowrap;
+
+    i {
+      vertical-align: middle;
+      font-weight: 300;
+    }
+
+    span {
+      height: 24px;
+      line-height: 24px;
+      vertical-align: middle;
+      margin-left: 5px;
+      font-size: 14px;
+      font-weight: 300;
+    }
+
+    &:hover {
+      background-color: rgba(255,255,255,0.05);
+    }
+
+    &:active {
+      background-color: rgba(255,255,255,0.1);
+    }
+
+    &:focus {
+      outline: 0 none;
+    }
+
+    &.active {
+      color: #1ec81e;
+    }
+  }
+}
