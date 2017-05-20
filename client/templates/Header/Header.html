@@ -6,11 +6,14 @@
     <button data-action="toggleDrawingMode" class="{{#if isDrawingMode}}active{{/if}}">
       <i class="material-icons">mode_edit</i><span>Draw</span>
     </button>
-    <button data-action="remove">
+    <button data-action="remove" disabled="{{#unless isObjectSelected}}disabled{{/unless}}">
       <i class="material-icons">delete</i><span>Remove</span>
     </button>
-    <button class="clear">
+    <button data-action="clear">
       <i class="material-icons">clear</i><span>Clear</span>
+    </button>
+    <button data-action="createBoard">
+      <i class="material-icons">add</i><span>Create Board</span>
     </button>
     <div class="objectsCount">{{objectsCount}} object(s) on canvas</div>
     {{> loginButtons}}

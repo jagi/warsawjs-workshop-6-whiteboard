@@ -4,16 +4,44 @@ import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { Session } from 'meteor/session';
 import { Template } from 'meteor/templating';
+import { ReactiveVar } from 'meteor/reactive-var';
 
 import Objects from '/imports/collections/Objects';
 
 Template.Board.onCreated(function() {
+  this.boardId = new ReactiveVar();
+
   // Subscribe to fabric objects in a template, so that it will automaticaly
   // unsubscribe when template is destroyed.
-  this.subscribe('allObjects');
+  Tracker.autorun(() => {
+    // Rerun when on path change.
+    FlowRouter.watchPathChange();
+    const boardId = FlowRouter.current().params.id;
+    this.boardId.set(boardId);
+    this.subscribe('boardById', boardId);
+    this.subscribe('objectsByBoardId', boardId);
+
+    // Clear fabric object selection from session.
+    Session.delete('selectedObjectId');
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.keyCode === 8) {
+      const selectedObjectId = Session.get('selectedObjectId');
+      if (!selectedObjectId) {
+        return;
+      }
+      Meteor.call('removeObject', selectedObjectId, (err) => {
+        if (err) {
+          alert(err.message);
+        }
+      });
+    }
+  });
 });
 
 Template.Board.onRendered(function() {
+  console.log('Board.onRendered');
   // Get canvas HTML element from template.
   const canvasElement = this.find('canvas');
   // Create new fabric canvas.
@@ -52,6 +80,7 @@ Template.Board.onRendered(function() {
     // Object.insert. Before Object.insert returns the "added" event is already
     // called and we need to set id on the fabricObject before that.
     object._id = fabricObject.id = Random.id();
+    object.boardId = fabricObject.boardId = this.boardId.get();
     fabricObject.userId = Meteor.userId();
     Meteor.call('insertObject', object, (err) => {
       if (err) {
@@ -107,6 +136,17 @@ Template.Board.onRendered(function() {
   canvas.on('object:moving', updateObject(['left', 'top']));
   canvas.on('object:scaling', updateObject(['scaleX', 'scaleY']));
   canvas.on('object:rotating', updateObject(['angle']));
+
+  canvas.on('object:selected', (e) => {
+    const fabricObject = e.target;
+    Session.set('selectedObjectId', fabricObject.id);
+    console.log('object:selected', fabricObject.id);
+  });
+
+  canvas.on('selection:cleared', (e) => {
+    Session.delete('selectedObjectId');
+    console.log('selection:cleared');
+  });
 
   this.autorun(() => {
     Objects.find().observeChanges({

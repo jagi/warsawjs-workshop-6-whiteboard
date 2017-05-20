@@ -23,3 +23,5 @@ session
 accounts-password
 accounts-ui
 msavin:mongol
+kadira:flow-router
+kadira:blaze-layout
