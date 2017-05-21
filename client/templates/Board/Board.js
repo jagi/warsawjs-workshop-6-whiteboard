@@ -13,10 +13,9 @@ Template.Board.onCreated(function() {
 
   // Subscribe to fabric objects in a template, so that it will automaticaly
   // unsubscribe when template is destroyed.
-  Tracker.autorun(() => {
+  this.autorun(() => {
     // Rerun when on path change.
-    FlowRouter.watchPathChange();
-    const boardId = FlowRouter.current().params.id;
+    const boardId = FlowRouter.getParam('id');
     this.boardId.set(boardId);
     this.subscribe('boardById', boardId);
     this.subscribe('objectsByBoardId', boardId);
